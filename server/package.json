@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "node -r ./scripts/load-root-env.cjs ../node_modules/prisma/build/index.js generate --schema=prisma/schema.prisma",
+    "db:migrate": "node -r ./scripts/load-root-env.cjs ../node_modules/prisma/build/index.js migrate dev --schema=prisma/schema.prisma",
+    "db:migrate:deploy": "node -r ./scripts/load-root-env.cjs ../node_modules/prisma/build/index.js migrate deploy --schema=prisma/schema.prisma",
+    "db:push": "node -r ./scripts/load-root-env.cjs ../node_modules/prisma/build/index.js db push --schema=prisma/schema.prisma",
+    "export:json": "node -r ./scripts/load-root-env.cjs ../node_modules/tsx/dist/cli.mjs scripts/export-watchlist-json.ts",
+    "import:json": "node -r ./scripts/load-root-env.cjs ../node_modules/tsx/dist/cli.mjs scripts/import-watchlist-json.ts",
+    "bulk:import": "node -r ./scripts/load-root-env.cjs ../node_modules/tsx/dist/cli.mjs scripts/bulk-import-watchlist.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "simple-git": "^3.27.0",
+    "winston": "^3.17.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "prisma": "^6.5.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

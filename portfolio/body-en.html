@@ -1,0 +1,184 @@
+<!--
+  TinyMCE / project body — EN
+  Paste into: Project Details → Content (EN) → Source/code view
+  Upload images to: /img/projects/ek-watchlist/
+  Keep data-fslightbox="ek-watchlist" (same as TR). No extra scripts/CSS.
+-->
+<p class="case-lead">
+  A personal watchlist to search, sort, and rate movies and TV shows. Add via Tailscale
+  and Siri; back up automatically to GitHub.
+</p>
+
+<h2>Context and goal</h2>
+<p>
+  I wanted one place for scattered “to watch” notes: posters, status, personal ratings,
+  favorite rankings, and quick add from my phone. Keep data local; make backups automatic.
+</p>
+
+<figure class="case-figure case-block">
+  <a
+    href="https://eminkucuk.online/projects/ekw-grid.jpg"
+    data-fslightbox="ek-watchlist"
+    aria-label="Collection grid screen"
+  >
+    <img
+      src="https://eminkucuk.online/projects/ekw-grid.jpg"
+      alt="EK Watchlist collection screen with movie and TV cards in a grid"
+      width="1600"
+      height="1000"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption>Collection — grid cards.</figcaption>
+</figure>
+
+<h2>My responsibility</h2>
+<ul>
+  <li>Product scope, UI, and the Jungle / Cream design system</li>
+  <li>React app (Vite, Chakra, TanStack Query / Router)</li>
+  <li>Express API, Prisma + SQLite, Zod validation</li>
+  <li>TMDB integration, GitHub JSON backups, Siri / Tailscale voice endpoint</li>
+  <li>Electron Dev Panel for start / stop / logs</li>
+</ul>
+
+<h2>Constraints and decisions</h2>
+<ul>
+  <li>Local-first: no required cloud; SQLite is enough</li>
+  <li>Web Speech fails on iOS → Siri Shortcuts + REST voice API</li>
+  <li>Backups on a schedule and on shutdown, not on every edit</li>
+  <li>Monorepo: client, server, and dev-manager</li>
+</ul>
+
+<div class="case-callout">
+  <p>
+    <strong>Note:</strong> Because Web Speech API is unavailable in iOS Safari, voice add
+    is handled by a Siri Shortcut calling a Tailscale-reachable REST endpoint.
+  </p>
+</div>
+
+<h2>Process</h2>
+<p>
+  Started with the list and TMDB add flow. Then status, ratings, drag-and-drop ordering,
+  and stats. Next came Tailscale mobile access, voice add, and automatic GitHub backups.
+  Finished with the Dev Panel and everyday UX details.
+</p>
+
+<section class="case-gallery case-block" aria-label="Screenshots">
+  <h2 class="case-gallery__title">Screenshots</h2>
+  <div class="case-gallery__viewport">
+    <div class="swiper case-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-search.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="TMDB search screen"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-search.jpg"
+              alt="TMDB live search and add to list"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-rankings.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="Favorites ranking screen"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-rankings.jpg"
+              alt="Favorites ranking with drag and drop"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-settings.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="Settings and backup screen"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-settings.jpg"
+              alt="Settings page and automatic GitHub backup"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-dev-panel.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="Electron Dev Panel"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-dev-panel.jpg"
+              alt="Electron Dev Panel with start stop and logs"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-mobile.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="Mobile view"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-mobile.jpg"
+              alt="Watchlist on mobile with bottom navigation"
+              width="900"
+              height="1600"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ekw-hero.jpg"
+            data-fslightbox="ek-watchlist"
+            aria-label="Overview"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ekw-hero.jpg"
+              alt="EK Watchlist overview screen"
+              width="1600"
+              height="1000"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="case-gallery__nav case-gallery__nav--prev" aria-label="Previous">
+      <svg class="icon" aria-hidden="true"><use href="/img/ui-sprite.svg#arrow-left"></use></svg>
+    </button>
+    <button type="button" class="case-gallery__nav case-gallery__nav--next" aria-label="Next">
+      <svg class="icon" aria-hidden="true"><use href="/img/ui-sprite.svg#arrow-right"></use></svg>
+    </button>
+  </div>
+  <div class="case-gallery__pagination"></div>
+</section>
+
+<h2>Outcome</h2>
+<p>
+  A daily-driver watchlist: search, cards, rankings, mobile navigation, Siri “add to list”,
+  and automatic backups. The same architecture carried into later personal tools.
+</p>

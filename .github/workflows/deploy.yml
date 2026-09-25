@@ -1,0 +1,138 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Prisma generate
+        env:
+          # generate only — no live DB in CI
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+        run: npm run db:generate
+
+      - name: Build
+        run: npm run build
+
+  deploy:
+    name: Deploy to Oracle
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          if [ -z "${SSH_PRIVATE_KEY:-}" ]; then
+            echo "SSH_PRIVATE_KEY secret is empty. Add it under Settings → Environments → production."
+            exit 1
+          fi
+          if [ -z "${SSH_HOST:-}" ]; then
+            echo "SSH_HOST secret is empty."
+            exit 1
+          fi
+
+          # Normalize CRLF from Windows paste; ensure trailing newline
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          if ! ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null 2>&1; then
+            echo "SSH_PRIVATE_KEY is not a valid private key (check BEGIN/END lines, do not paste the .pub file)."
+            exit 1
+          fi
+
+          PORT="${SSH_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          echo "SSH setup OK for ${SSH_HOST}:${PORT}"
+
+      - name: Sync app to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${SSH_PORT:-22}"
+          USER_NAME="${SSH_USER:-ubuntu}"
+          TARGET="${USER_NAME}@${SSH_HOST}"
+          REMOTE_DIR="/opt/apps/apps/watchlist"
+          SSH_OPTS="-i ~/.ssh/deploy_key -p ${PORT} -o IdentitiesOnly=yes -o BatchMode=yes"
+
+          rsync -az --delete \
+            -e "ssh ${SSH_OPTS}" \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude '**/node_modules' \
+            --exclude 'dist' \
+            --exclude '**/dist' \
+            --exclude '.env' \
+            --exclude '.env.*' \
+            --exclude 'watchlist-export.json' \
+            --exclude 'watchlist-export*.json' \
+            --exclude '*.db' \
+            --exclude 'server/data' \
+            --exclude 'portfolio' \
+            --exclude 'dev-manager' \
+            --exclude '.cursor' \
+            ./ "${TARGET}:${REMOTE_DIR}/"
+
+      - name: Build and restart container
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${SSH_PORT:-22}"
+          USER_NAME="${SSH_USER:-ubuntu}"
+          TARGET="${USER_NAME}@${SSH_HOST}"
+
+          ssh -i ~/.ssh/deploy_key -p "$PORT" -o IdentitiesOnly=yes -o BatchMode=yes "$TARGET" \
+            'cd /opt/apps && docker compose build wl-api && docker compose up -d wl-api && docker compose ps wl-api'
+
+      - name: Health check
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS https://ekwl.eminkucuk.online/health | grep -q healthy; then
+              echo "Health OK"
+              exit 0
+            fi
+            echo "Waiting for health... ($i)"
+            sleep 5
+          done
+          echo "Health check failed"
+          exit 1

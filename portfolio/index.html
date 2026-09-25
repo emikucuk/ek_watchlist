@@ -1,0 +1,184 @@
+<!--
+  TinyMCE / proje gövdesi — TR
+  Yapıştır: Proje Detayları → İçerik (TR) → Kaynak/code görünümü
+  Görselleri Dosya Yönetimi’nden şuraya yükle: /img/projects/ek-watchlist/
+  Site kabuğu h1, meta kartlar, fslightbox ve Swiper’ı kendisi yükler — ekstra script/CSS yok.
+-->
+<p class="case-lead">
+  Film ve dizileri tek panelde toplayan kişisel watchlist. TMDB ile ara, sırala, puanla;
+  Tailscale ve Siri ile telefondan ekle; GitHub’a otomatik yedekle.
+</p>
+
+<h2>Bağlam ve hedef</h2>
+<p>
+  Dağınık “izlenecekler” notlarını tek yerde tutmak istedim: poster, durum, kişisel puan,
+  favori sıralama ve telefonda hızlı ekleme. Veri lokal kalsın, yedek otomatik olsun.
+</p>
+
+<figure class="case-figure case-block">
+  <a
+    href="https://eminkucuk.online/projects/ekw-grid.jpg"
+    data-fslightbox="ek-watchlist"
+    aria-label="Koleksiyon grid ekranı"
+  >
+    <img
+      src="https://eminkucuk.online/projects/ekw-grid.jpg"
+      alt="EK Watchlist koleksiyon ekranı, film ve dizi kartları grid görünümü"
+      width="1600"
+      height="1000"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <figcaption>Koleksiyon — grid kartlar.</figcaption>
+</figure>
+
+<h2>Sorumluluğum</h2>
+<ul>
+  <li>Ürün kapsamı, arayüz ve Jungle / Cream tasarım dili</li>
+  <li>React paneli (Vite, Chakra, TanStack Query / Router)</li>
+  <li>Express API, Prisma + SQLite, Zod doğrulama</li>
+  <li>TMDB entegrasyonu, GitHub JSON yedek, Siri / Tailscale voice endpoint</li>
+  <li>Electron Dev Panel ile start / stop / log yönetimi</li>
+</ul>
+
+<h2>Kısıtlar ve kararlar</h2>
+<ul>
+  <li>Lokal-first: zorunlu cloud yok, SQLite yeterli</li>
+  <li>iOS’ta Web Speech çalışmadığı için Siri Kestirmeleri + REST voice API</li>
+  <li>Yedekleme: zamanlanmış aralık + servis kapanırken; her değişiklikte değil</li>
+  <li>Monorepo: client, server ve dev-manager ayrımı</li>
+</ul>
+
+<div class="case-callout">
+  <p>
+    <strong>Not:</strong> iOS Safari’de Web Speech API olmadığı için sesli ekleme,
+    Tailscale üzerinden açık bir voice REST endpoint’ine bağlanan Siri Kestirmesi ile çözüldü.
+  </p>
+</div>
+
+<h2>Süreç</h2>
+<p>
+  Önce liste ve TMDB ile ekleme. Sonra durum, puan, drag &amp; drop sıralama ve istatistikler.
+  Ardından Tailscale ile mobil erişim, sesli ekleme ve otomatik GitHub yedek. Son aşamada
+  Dev Panel ve günlük kullanım detayları.
+</p>
+
+<section class="case-gallery case-block" aria-label="Ekran görüntüleri">
+  <h2 class="case-gallery__title">Ekran görüntüleri</h2>
+  <div class="case-gallery__viewport">
+    <div class="swiper case-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/search.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="TMDB arama ekranı"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/search.png"
+              alt="TMDB canlı arama ve listeye ekleme"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/rankings.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="Favori sıralama ekranı"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/rankings.png"
+              alt="Favori sıralama, drag and drop"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/settings.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="Ayarlar ve yedek ekranı"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/settings.png"
+              alt="Ayarlar sayfası ve GitHub otomatik yedek"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/dev-panel.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="Electron Dev Panel"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/dev-panel.png"
+              alt="Electron Dev Panel, start stop ve loglar"
+              width="1200"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/mobile.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="Mobil görünüm"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/mobile.png"
+              alt="Mobil bottom navigation ile watchlist"
+              width="900"
+              height="1600"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+        <div class="swiper-slide case-gallery__slide">
+          <a
+            href="https://eminkucuk.online/projects/ek-watchlist/hero.png"
+            data-fslightbox="ek-watchlist"
+            aria-label="Genel bakış"
+          >
+            <img
+              src="https://eminkucuk.online/projects/ek-watchlist/hero.png"
+              alt="EK Watchlist genel bakış ekranı"
+              width="1600"
+              height="1000"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="case-gallery__nav case-gallery__nav--prev" aria-label="Önceki">
+      <svg class="icon" aria-hidden="true"><use href="/img/ui-sprite.svg#arrow-left"></use></svg>
+    </button>
+    <button type="button" class="case-gallery__nav case-gallery__nav--next" aria-label="Sonraki">
+      <svg class="icon" aria-hidden="true"><use href="/img/ui-sprite.svg#arrow-right"></use></svg>
+    </button>
+  </div>
+  <div class="case-gallery__pagination"></div>
+</section>
+
+<h2>Sonuç</h2>
+<p>
+  Günlük kullandığım bir watchlist: arama, kartlar, favori sıralama, mobil navigasyon,
+  Siri ile “listeye ekle” ve otomatik yedek. Aynı mimari sonraki kişisel araçlara taşındı.
+</p>

@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MediaType {
+  MOVIE
+  TV
+  ANIME
+  ANIMATION
+  DOCUMENTARY
+  MINI_SERIES
+}
+
+enum WatchStatus {
+  WATCHING
+  WATCHED
+  PLAN_TO_WATCH
+  DROPPED
+}
+
+model WatchItem {
+  id             String       @id @default(cuid())
+  tmdbId         Int
+  title          String
+  originalTitle  String?
+  overview       String?
+  posterPath     String?
+  backdropPath   String?
+  releaseDate    String?
+  mediaType      MediaType
+  tmdbRating     Float?
+  personalRating Float?
+  status         WatchStatus  @default(PLAN_TO_WATCH)
+  notes          String?
+  sortOrder      Int          @default(0)
+  rankingOrder   Int?
+  currentSeason  Int?
+  currentEpisode Int?
+  runtimeMinutes Int?
+  genres         String?
+  customCategoryId String?
+  customCategory CustomCategory? @relation(fields: [customCategoryId], references: [id], onDelete: SetNull)
+  tags           ItemTag[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([tmdbId, mediaType])
+  @@index([status])
+  @@index([mediaType])
+  @@index([sortOrder])
+  @@index([rankingOrder])
+}
+
+model CustomCategory {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  color     String      @default("#6366f1")
+  icon      String?
+  items     WatchItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  items     ItemTag[]
+  createdAt DateTime  @default(now())
+}
+
+model ItemTag {
+  itemId String
+  tagId  String
+  item   WatchItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  tag    Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, tagId])
+}
+
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model BackupLog {
+  id        String   @id @default(cuid())
+  status    String
+  message   String?
+  createdAt DateTime @default(now())
+}
